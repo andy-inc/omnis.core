@@ -1,0 +1,36 @@
+{
+  "name": "omnis.core",
+  "version": "0.0.1",
+  "description": "Full Stack Web Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://inshadow@github.com/inshadow/omnis.core.git"
+  },
+  "keywords": [
+    "framework",
+    "fullstack",
+    "web",
+    "http",
+    "https",
+    "reslfull",
+    "api"
+  ],
+  "author": "Andy <andy@sumskoy.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/inshadow/omnis.core/issues"
+  },
+  "devDependencies": {
+    "mocha": "~1.16.1",
+    "should": "~2.1.1",
+    "supertest": "~0.8.2"
+  },
+  "dependencies": {
+    "express": "~3.4.7",
+    "async": "~0.2.9"
+  }
+}
