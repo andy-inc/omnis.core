@@ -17,6 +17,7 @@ SimpleController.prototype.delete = function(req, res, next){
 
 SimpleController.prototype.init = function(omnis, callback){
     this.initData = "TEST";
+
     callback();
 };
 

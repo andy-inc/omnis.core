@@ -4,7 +4,8 @@
   "description": "Full Stack Web Application",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive ./test"
+    "test": "mocha --recursive ./test",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,10 @@
   "devDependencies": {
     "mocha": "~1.16.1",
     "should": "~2.1.1",
-    "supertest": "~0.8.2"
+    "supertest": "~0.8.2",
+    "istanbul": "~0.2.3",
+    "JSV": "~4.0.2",
+    "connect-mongo": "~0.4.0"
   },
   "dependencies": {
     "express": "~3.4.7",

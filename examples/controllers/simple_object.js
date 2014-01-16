@@ -7,11 +7,6 @@ module.exports = exports = {
     version: 'v1',
     route: '/simple_object',
 
-
-    get: function(req, res, next){
-        res.send({hello: 'World'});
-    },
-
     delete: function(req, res, next){
         res.send({hello: initData});
     },
