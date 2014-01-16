@@ -116,7 +116,7 @@ describe('Core', function(){
         it('should save session and get back', function(done){
             Core.controller.clear();
             Core.controller(SessionController);
-            Core.session('monogodb','fewfaweffawef', {}, {uri: 'mongodb://localhost/test'});
+            Core.session('mongodb','fewfaweffawef', {}, {url: 'mongodb://localhost/test'});
             Core.init({root: __dirname + "/../", mode: 'test'});
             Core.start(url, function(err){
                 if (err) throw err;
