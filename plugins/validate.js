@@ -2,7 +2,7 @@
  * Created by Andy <andy@sumskoy.com> on 21/12/13.
  */
 
-var util = require('util');
+var errors = require('../lib/errors');
 
 /**
  * Init validate plugin
@@ -22,25 +22,6 @@ module.exports = exports = function(options){
     return new Validate(options);
 };
 
-var _errors = [ 'ValidateSchemaNotFound' ];
-
-function AbstractError(msg, constr) {
-    Error.captureStackTrace(this, constr || this);
-    this.message = msg || 'Error';
-}
-util.inherits(AbstractError, Error);
-AbstractError.prototype.name = 'Abstract Error';
-
-var errors = {};
-_errors.forEach(function (errorName) {
-    var errorFn = function (msg) {
-        errorFn.super_.call(this, msg, this.constructor);
-    };
-    util.inherits(errorFn, AbstractError);
-    errorFn.prototype.name = errorName;
-    errors[errorName] = errorFn;
-});
-
 /**
  * Validate plugin constructor
  *
@@ -57,7 +38,7 @@ var Validate = function(options){
 };
 
 /**
- * Default validate middleware
+ * Default validate error middleware
  * @param err
  * @param req
  * @param res
@@ -65,7 +46,11 @@ var Validate = function(options){
  * @private
  */
 Validate.prototype._error = function(err, req, res, next){
-    next(err);
+    if (errors.instanceof(err, errors.OmnisValidationFailed)){
+        res.send(400, err.toJSON());
+    } else {
+        next(err);
+    }
 };
 
 /**
@@ -88,7 +73,7 @@ Validate.prototype._beforeRoute = function(controller, method){
         if (typeof settings.model === 'string') {
             var keySchema = this.env.findSchema(settings.model);
             if (keySchema == null){
-                next(new errors.ValidateSchemaNotFound("Model not found: " + settings.model));
+                next(new errors.OmnisValidationModelNotFound(settings.model));
                 return;
             }
             validateResult = keySchema.validate(req.body);
@@ -97,7 +82,21 @@ Validate.prototype._beforeRoute = function(controller, method){
         }
 
         if (validateResult.errors.length > 0){
-            next(validateResult);
+            validateResult.toJSON = function(){
+                return validateResult.errors.map(function(err){
+                    var result = {};
+                    for(var key in err) if (err.hasOwnProperty(key) && key !== 'uri'){
+                        result[key] = err[key];
+                    }
+                    if (result.schemaUri.indexOf('urn:uuid:') == 0){
+                        delete result.schemaUri;
+                    }
+                    return result;
+                });
+            };
+            var modelName = settings.model;
+            if (typeof modelName !== 'string') modelName = 'custom';
+            next(new errors.OmnisValidationFailed(modelName, validateResult));
             return;
         }
         next();

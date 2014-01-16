@@ -6,3 +6,5 @@ exports.Core = require('./lib/core').Core;
 exports.plugins = {
   validate: require('./plugins/validate')
 };
+
+exports.errors = require('./lib/errors');

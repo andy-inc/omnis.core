@@ -3,6 +3,7 @@
  */
 
 var JSV = require('JSV').JSV.env;
+var errors = require('../../lib/errors');
 
 var ValidateController = function(){
     this.version = 'v1';
@@ -11,7 +12,11 @@ var ValidateController = function(){
         validate: {
             post: "validate:post#",
             put: {model: "validate:post#", error: function(err, req, res, next){
-                res.send(400, "ERROR: " + err.errors.map(function(err){ return err.message; }));
+                if (errors.instanceof(err, errors.OmnisValidationFailed)){
+                    res.send(400, "ERROR: " + err.exception.errors.map(function(err){ return err.message; }));
+                } else {
+                    next(err);
+                }
             }}
         }
     };

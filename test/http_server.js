@@ -21,6 +21,7 @@ describe('Core', function(){
     describe('#start default', function(){
         it('should create server with 200 on start', function(done){
             Core.controller.clear();
+            Core.plugin.clear();
             Core.init({root: __dirname + "/../", mode: 'test'});
             Core.start(url, function(err){
                 if (err) throw err;
@@ -36,6 +37,7 @@ describe('Core', function(){
         it('should start server with route', function(done){
             Core.controller.clear();
             Core.controller(SimpleController);
+            Core.plugin.clear();
             Core.init({root: __dirname + "/../", mode: 'test'});
             Core.start(url, function(err){
                 if (err) throw err;
@@ -52,6 +54,7 @@ describe('Core', function(){
         it('should start server with route and after init', function(done){
             Core.controller.clear();
             Core.controller(SimpleController);
+            Core.plugin.clear();
             Core.init({root: __dirname + "/../", mode: 'test'});
             Core.start(url, function(err){
                 if (err) throw err;
@@ -68,6 +71,7 @@ describe('Core', function(){
         it('should start server with route as object and after init', function(done){
             Core.controller.clear();
             Core.controller(SimpleControllerAsObject);
+            Core.plugin.clear();
             Core.init({root: __dirname + "/../", mode: 'test'});
             Core.start(url, function(err){
                 if (err) throw err;
@@ -84,6 +88,7 @@ describe('Core', function(){
         it('should wrap error', function(done){
             Core.controller.clear();
             Core.controller(SimpleControllerAsObject);
+            Core.plugin.clear();
             Core.init({root: __dirname + "/../", mode: 'test'});
             Core.on('error', function(err){});
             Core.start(url, function(err){
@@ -102,6 +107,7 @@ describe('Core', function(){
         it('should be 404 on wrong route with controllers', function(done){
             Core.controller.clear();
             Core.controller(SimpleControllerAsObject);
+            Core.plugin.clear();
             Core.init({root: __dirname + "/../", mode: 'test'});
             Core.start(url, function(err){
                 if (err) throw err;
@@ -120,6 +126,7 @@ describe('Core', function(){
         it('should save session and get back', function(done){
             Core.controller.clear();
             Core.controller(SessionController);
+            Core.plugin.clear();
             Core.session('mongodb','fewfaweffawef', {}, {url: 'mongodb://localhost/test'});
             Core.init({root: __dirname + "/../", mode: 'test'});
             Core.start(url, function(err){
@@ -129,6 +136,7 @@ describe('Core', function(){
                     .send({name: "test"})
                     .end(function(err, res){
                         if (err){
+                            Core.stop();
                             done(err);
                         } else {
                             request(url)
@@ -144,155 +152,6 @@ describe('Core', function(){
             });
         });
 
-    });
-
-    describe("#plugins", function(){
-        it('validate with default error', function(done){
-            Core.controller.clear();
-            Core.controller(ValidateController);
-            Core.plugin(require('../plugins/validate')({environment: JSV.env}));
-            Core.init({root: __dirname + "/../", mode: 'test'});
-            Core.start(url, function(err){
-                if (err) throw err;
-                request(url)
-                    .post('/api/v1/validate')
-                    .send({})
-                    .expect(500, 'Unknown error')
-                    .end(function(err){
-                        Core.stop();
-                        done(err);
-                    });
-            });
-        });
-        it('validate with default custom', function(done){
-            Core.controller.clear();
-            Core.controller(ValidateController);
-            Core.plugin(require('../plugins/validate')({environment: JSV.env}));
-            Core.init({root: __dirname + "/../", mode: 'test'});
-            Core.start(url, function(err){
-                if (err) throw err;
-                request(url)
-                    .put('/api/v1/validate')
-                    .send({})
-                    .expect(400, 'ERROR: Property is required')
-                    .end(function(err){
-                        Core.stop();
-                        done(err);
-                    });
-            });
-        });
-
-        it('validate with custom default error', function(done){
-            Core.controller.clear();
-            Core.controller(ValidateController);
-            Core.plugin(require('../plugins/validate')({environment: JSV.env, defaultError: function(err, req, res, next){
-                res.send(500, "ERROR");
-            }}));
-            Core.init({root: __dirname + "/../", mode: 'test'});
-            Core.start(url, function(err){
-                if (err) throw err;
-                request(url)
-                    .post('/api/v1/validate')
-                    .send({})
-                    .expect(500, 'ERROR')
-                    .end(function(err){
-                        Core.stop();
-                        done(err);
-                    });
-            });
-        });
-
-        it('validate with success', function(done){
-            Core.controller.clear();
-            Core.controller(ValidateController);
-            Core.plugin.clear();
-            Core.plugin(require('../plugins/validate')({environment: JSV.env}));
-            Core.init({root: __dirname + "/../", mode: 'test'});
-            Core.start(url, function(err){
-                if (err) throw err;
-                request(url)
-                    .put('/api/v1/validate')
-                    .send({code: "test"})
-                    .expect(200, '{\n  "code": "test"\n}')
-                    .end(function(err){
-                        Core.stop();
-                        done(err);
-                    });
-            });
-        });
-
-        it('validate with custom scheme', function(done){
-            Core.controller.clear();
-            Core.controller(ValidateExController);
-            Core.plugin.clear();
-            Core.plugin(require('../plugins/validate')({environment: JSV.env}));
-            Core.init({root: __dirname + "/../", mode: 'test'});
-            Core.start(url, function(err){
-                if (err) throw err;
-                request(url)
-                    .post('/api/v1/validate_ex')
-                    .send({code: "test"})
-                    .expect(500, 'Unknown error')
-                    .end(function(err){
-                        Core.stop();
-                        done(err);
-                    });
-            });
-        });
-
-        it('validate without scheme', function(done){
-            Core.controller.clear();
-            Core.controller(ValidateExController);
-            Core.plugin.clear();
-            Core.plugin(require('../plugins/validate')({environment: JSV.env}));
-            Core.init({root: __dirname + "/../", mode: 'test'});
-            Core.start(url, function(err){
-                if (err) throw err;
-                request(url)
-                    .put('/api/v1/validate_ex')
-                    .send({code: "test"})
-                    .expect(500, 'Model not found: not:found#')
-                    .end(function(err){
-                        Core.stop();
-                        done(err);
-                    });
-            });
-        });
-
-        it('validate without validating', function(done){
-            Core.controller.clear();
-            Core.controller(ValidateExController);
-            Core.plugin.clear();
-            Core.plugin(require('../plugins/validate')({environment: JSV.env}));
-            Core.init({root: __dirname + "/../", mode: 'test'});
-            Core.start(url, function(err){
-                if (err) throw err;
-                request(url)
-                    .get('/api/v1/validate_ex')
-                    .expect(200, 'GET')
-                    .end(function(err){
-                        Core.stop();
-                        done(err);
-                    });
-            });
-        });
-
-        it('validate with out configuration', function(done){
-            Core.controller.clear();
-            Core.controller(SimpleController);
-            Core.plugin.clear();
-            Core.init({root: __dirname + "/../", mode: 'test'});
-            Core.start(url, function(err){
-                if (err) throw err;
-                request(url)
-                    .get('/api/v1/simple')
-                    .expect(200, '{\n  "hello": "World"\n}')
-                    .end(function(err){
-                        Core.stop();
-                        done(err);
-                    });
-            });
-        });
     });
 
 });
