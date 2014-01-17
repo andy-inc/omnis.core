@@ -12,7 +12,7 @@ var ValidateController = function(){
         validate: {
             post: "validate:post#",
             put: {model: "validate:post#", error: function(err, req, res, next){
-                if (errors.instanceof(err, errors.OmnisValidationFailed)){
+                if (errors.OmnisValidationFailed.instanceof(err)){
                     res.send(400, "ERROR: " + err.exception.errors.map(function(err){ return err.message; }));
                 } else {
                     next(err);
