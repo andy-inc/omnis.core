@@ -4,7 +4,8 @@
 exports.Core = require('./lib/core').Core;
 
 exports.plugins = {
-  validate: require('./plugins/validate')
+  validate: require('./plugins/validate'),
+  authorization: require('./plugins/authorization')
 };
 
 exports.errors = require('./lib/errors');
