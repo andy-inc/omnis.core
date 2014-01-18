@@ -85,6 +85,23 @@ describe('Core', function(){
             });
         });
 
+        it('should start server with route as object and get on sub path', function(done){
+            Core.controller.clear();
+            Core.controller(SimpleControllerAsObject);
+            Core.plugin.clear();
+            Core.init({root: __dirname + "/../", mode: 'test'});
+            Core.start(url, function(err){
+                if (err) throw err;
+                request(url)
+                    .get('/api/v1/simple_object/id5')
+                    .expect(200, '{\n  "hello": "id5"\n}')
+                    .end(function(err){
+                        Core.stop();
+                        done(err);
+                    });
+            });
+        });
+
         it('should wrap error', function(done){
             Core.controller.clear();
             Core.controller(SimpleControllerAsObject);

@@ -16,6 +16,10 @@ module.exports = exports = {
         next(err);
     },
 
+    'get-/:id': function(req, res, next){
+        res.send({hello: req.param('id')});
+    },
+
     init: function(omnis, callback){
         initData = "TEST";
         callback();
