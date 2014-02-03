@@ -1,0 +1,20 @@
+$defaults:
+  ENV: development
+  IP: localhost
+  PORT: 3001
+  MURL: mongodb://localhost/omnis
+
+development:
+  url: "http://localhost:3001"
+  db:
+    url: mongodb://localhost/dev-omnis
+
+production:
+  url: "http://#{IP}:#{PORT}"
+  db:
+    url: "#{MURL}"
+
+test:
+  url: "http://localhost:3003"
+  db:
+    url: mongodb://localhost/test-omnis
