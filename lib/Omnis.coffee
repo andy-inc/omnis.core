@@ -45,7 +45,7 @@ class Omnis extends Loader
     #Template Engine
     @app.engine('html', swig.renderFile)
     @app.set('view engine', 'html')
-    @app.set('views', path.join(__dirname, "templates"))
+    @app.set('views', @path('view', ''))
 
     #Enable cache in production
     if "production" == @config.environment
@@ -99,7 +99,7 @@ class Omnis extends Loader
       else
         data = if 'production' != @config.environment then err else null
         res.status(code)
-        res._render("E#{code}", {error: data})
+        res._render(path.join(__dirname, 'templates', "E#{code}"), {error: data})
 
 
   getEnvironment: ()-> @config.environment
