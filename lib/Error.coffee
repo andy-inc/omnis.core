@@ -5,6 +5,7 @@ class OmnisError extends Error
       name: name
       extention: @_explayExtention(extention)
     @name = name
+    @message = message
     Error.call @, message
     Error.captureStackTrace @, arguments.callee
 

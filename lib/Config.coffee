@@ -32,7 +32,9 @@ class Config
     envName ?= obj["$defaults"].ENV if obj["$defaults"].ENV?
     envName ?= "development"
 
-    for key, value of obj[envName]
+    @environment = envName
+
+    for key, value of obj.config
       @[key] = value
 
 

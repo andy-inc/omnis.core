@@ -15,8 +15,8 @@ describe 'Loader', ()->
       assert.isNotNull loader.rconfig('omnis')
     it 'should get right path to controller', ()->
       assert.equal loader.path('controller', 'omnis'), 'example/app/controllers/omnis'
-      assert.equal loader.path('controller', 'simple.omnis'), 'example/app/modules/simple/controllers/omnis'
-      assert.equal loader.path('controller', 'simple.test.omnis'), 'example/app/modules/simple/modules/test/controllers/omnis'
+      assert.equal loader.path('controller', 'simple#omnis'), 'example/app/modules/simple/controllers/omnis'
+      assert.equal loader.path('controller', 'simple#test#omnis'), 'example/app/modules/simple/modules/test/controllers/omnis'
 
 describe 'Config', ()->
 
@@ -27,7 +27,7 @@ describe 'Config', ()->
         IP: "localhost"
         PORT: 3001
         MURL: "mongodb://localhost/omnis"
-      production:
+      config:
         url: 'http://#{IP}:#{PORT}'
         db:
           url: '#{MURL}'

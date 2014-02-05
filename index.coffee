@@ -1,1 +1,1 @@
-exports.Omnic = require('./lib/Omnis')
+exports.Omnis = require('./lib/Omnis').Omnis
