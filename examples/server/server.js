@@ -4,17 +4,32 @@
 var Omnis = require('../..').$omnis(__dirname);
 var app = global.$app = Omnis.$application("test");
 
-app.paths('**/*.js', '!**/node_modules/**', '!server.js');
-
-app.findFiles('**/schemas/**/*.json', '!**/node_modules/**').then(function(files){
-    //Import schemas
+app.config({
+    debug: true,
+    ip: "127.0.0.1",
+    port: 3001,
+    static: ["./static"],
+    views: {
+        cache: true
+    },
+    cookie: "secret",
+    session: {
+        "options": {
+            "secret": "very secret worlds"
+        }
+    }
 });
 
-app.setup().then(function(){
+app.plugins(require('./plugins/validation')).then(function(){
+    app.paths('./*.js', '!**/node_modules/**', '!server.js');
+    app.paths('modules/**/*.js');
+}).then(function(){
+   return app.setup();
+}).then(function(){
     return app.start();
 }).then(function(){
-    var point = app.getHttpPoint();
+    var point = app.status();
     console.log("Listen on http://" + point.ip + ":" + point.port );
 }).fail(function(err){
-    console.log(err);
+    console.log(err.stack);
 });

@@ -1,7 +1,7 @@
 /**
  * Created by Andy <andy@sumskoy.com> on 27/02/14.
  */
-global.$app.declare('indexCtrl', __filename, ['namesModel', function(model){
+global.$app.module('indexCtrl', __filename, ['namesModel', function(model){
 
     return {
         /**
@@ -33,7 +33,7 @@ global.$app.declare('indexCtrl', __filename, ['namesModel', function(model){
          * @ViewPath("$__dirname/../views")
          */
         testView: function(req, res){
-            res.render('test', {data: 1});
+            return res.render('test', {data: 1});
         }
     };
 

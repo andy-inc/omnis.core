@@ -1,18 +1,16 @@
 /**
  * Created by Andy <andy@sumskoy.com> on 28/02/14.
  */
-global.$app.declare('ValidationError', __filename, function($util, $errors){
+
+var plugin = function($util, $annotations, $errors){
+
     function ValidationError(ex){
         $errors.HttpError.call(this, "Validation error", ex);
         this.data.code = 400;
     }
     $util.inherits(ValidationError, $errors.HttpError);
-    return ValidationError;
-});
 
-global.$app.annotation('Validation', __filename, function($util, $BeforeRoute, ValidationError){
-
-    var Validation = function(schema, from, $default){
+    function Validation(schema, from, $default){
         if ($default){
             this.from = '';
             this.schema = $default;
@@ -20,20 +18,20 @@ global.$app.annotation('Validation', __filename, function($util, $BeforeRoute, V
             this.from = from || '';
             this.schema = schema || null;
         }
-    };
+    }
 
-    $util.inherits(Validation, $BeforeRoute);
+    $util.inherits(Validation, $annotations.BeforeRoute);
 
-    Validation.prototype.getMiddleware = function(){
-        var self = this;
-        return function(req, res, next){
-            if (!req.body.name){
-                next(new ValidationError("schema: "+self.schema+" name is empty"));
-            } else {
-                next();
-            }
-        };
+    Validation.prototype.middleware = function(req, res){
+        if (!req.body.name) throw new ValidationError("schema: "+this.schema+" name is empty");
     };
 
     return Validation;
-});
+};
+
+module.exports = exports = {
+    name: "Validation",
+    type: "annotation",
+    filename: __filename,
+    fn: plugin
+};

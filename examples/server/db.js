@@ -1,7 +1,7 @@
 /**
  * Created by Andy <andy@sumskoy.com> on 27/02/14.
  */
-global.$app.declare('db', __filename, function(config, $mongodb, $q){
+global.$app.module('db', __filename, function(config, $mongodb, $q){
     var _db;
     var DB = {
 

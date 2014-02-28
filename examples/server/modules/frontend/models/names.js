@@ -1,7 +1,7 @@
 /**
  * Created by Andy <andy@sumskoy.com> on 27/02/14.
  */
-global.$app.declare('namesModel', __filename, function($q, db){
+global.$app.module('namesModel', __filename, function($q, db){
     var collection = db.collection("names");
 
     var model = {

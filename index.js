@@ -3,4 +3,16 @@
  */
 exports.$annotations = require('./lib/annotations');
 
-exports.$omnis = require('./lib/omnis');
+var Omnis = require('./lib/omnis');
+var omnisInstance = null;
+
+exports.$omnis = function(){
+   if (omnisInstance){
+       return omnisInstance;
+   } else {
+       var args = [null].concat(Array.prototype.slice.call(arguments));
+       var factoryFunction = Omnis.bind.apply(Omnis, args);
+       omnisInstance = new factoryFunction();
+       return omnisInstance;
+   }
+};
