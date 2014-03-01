@@ -1,13 +1,17 @@
 /**
  * Created by Andy <andy@sumskoy.com> on 27/02/14.
  */
+/**
+ * @HttpMethod(url="/api/")
+ * @ViewPath("$__dirname/../")
+ */
 global.$app.module('indexCtrl', __filename, ['namesModel', function(model){
 
     return {
         /**
          * Index route
          *
-         * @HttpMethod(url="/")
+         * @HttpMethod(url="index")
          */
         index: function(req, res){
             return model.find().then(function(names){
@@ -18,7 +22,7 @@ global.$app.module('indexCtrl', __filename, ['namesModel', function(model){
         /**
          * Insert new name
          *
-         * @HttpMethod(method="POST", url="/name")
+         * @HttpMethod(method="POST", url="save")
          * @Validation()
          */
         insertNewName: function(req, res){
@@ -29,8 +33,8 @@ global.$app.module('indexCtrl', __filename, ['namesModel', function(model){
 
         /**
          *
-         * @HttpMethod(url="/test")
-         * @ViewPath("$__dirname/../views")
+         * @HttpMethod(url="test")
+         * @ViewPath("views")
          */
         testView: function(req, res){
             return res.render('test', {data: 1});
