@@ -4,7 +4,7 @@
 var Omnis = require('../..').$omnis(__dirname);
 var app = global.$app = Omnis.$application("test");
 
-app.config({
+app.init({
     debug: true,
     ip: "127.0.0.1",
     port: 3001,
@@ -18,9 +18,13 @@ app.config({
             "secret": "very secret worlds"
         }
     }
-});
-
-app.plugins(require('./plugins/validation')).then(function(){
+}).then(function(){
+   return app.search('plugins/**/*.js').then(function(result){
+       return app.mapSeries(result, function(el){
+           return app.plugin(require(el));
+       });
+   });
+}).then(function(){
     app.paths('./*.js', '!**/node_modules/**', '!server.js');
     app.paths('modules/**/*.js');
 }).then(function(){

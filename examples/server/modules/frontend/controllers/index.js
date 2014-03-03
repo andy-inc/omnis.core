@@ -5,7 +5,7 @@
  * @HttpMethod(url="/api/")
  * @ViewPath("$__dirname/../")
  */
-global.$app.module('indexCtrl', __filename, ['namesModel', function(model){
+global.$app.module('index', 'indexCtrl', __filename, ['namesModel', function(model){
 
     return {
         /**
@@ -38,6 +38,13 @@ global.$app.module('indexCtrl', __filename, ['namesModel', function(model){
          */
         testView: function(req, res){
             return res.render('test', {data: 1});
+        },
+
+        /**
+         * @ViewPath("views")
+         */
+        notAction: function(req, res){
+
         }
     };
 
