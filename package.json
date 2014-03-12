@@ -1,6 +1,6 @@
 {
   "name": "omnis.core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Full Stack Web Application",
   "main": "index.js",
   "repository": {
